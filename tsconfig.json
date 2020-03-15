@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"declaration": true,
+		"declarationDir": "types",
+		"esModuleInterop": true,
+		"noImplicitAny": true,
+		"outDir": "out",
+		"strict": true,
+		"target": "ES5"
+	},
+	"include": ["src"]
+}
