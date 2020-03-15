@@ -7,7 +7,40 @@
 
 ## About ##
 
-A custom **JavaScript** Exception class.
+A custom **JavaScript** exception class.
+
+## Download ##
+
+Using **npm**:
+
+```sh
+npm i @mfederczuk/custom-js-exception
+```
+
+Using **Yarn**:
+
+```sh
+yarn add @mfederczuk/custom-js-exception
+```
+
+## Usage ##
+
+Just extend the [`Exception`](src/index.ts#L22) class and call the super
+ constructor from yours.  
+It's a good idea to have an optional `cause` parameter that you pass to the
+ super constructor call as well.
+
+```ts
+import Exception from "@mfederczuk/custom-exception";
+
+class CustomException extends Exception {
+	constructor(readonly n: number, cause: (Exception | Error | null) = null) {
+		super(`custom message ${n}`, cause);
+	}
+}
+
+throw new CustomException(12);
+```
 
 ## Contributing ##
 
