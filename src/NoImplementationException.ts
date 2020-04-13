@@ -16,7 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export { default } from "./Exception";
-export { default as IllegalStateException } from "./IllegalStateException";
-export { default as InvalidArgumentException } from "./InvalidArgumentException";
-export { default as NoImplementationException } from "./NoImplementationException";
+import Exception from "./Exception";
+
+export default class NoImplementationException extends Exception {
+	constructor() {
+		super("No implementation");
+	}
+}
