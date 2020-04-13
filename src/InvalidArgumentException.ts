@@ -16,8 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export { default, default as Exception } from "./Exception";
-export { default as IllegalStateException } from "./IllegalStateException";
-export { default as InvalidArgumentException } from "./InvalidArgumentException";
-export { default as NoImplementationException } from "./NoImplementationException";
-export { default as OutOfRangeException } from "./OutOfRangeException";
+import Exception from "./Exception";
+
+export default class InvalidArgumentException extends Exception {
+	constructor(message: (string | null) = null,
+	            cause: (Exception | Error | null) = null) {
+		super(message, cause);
+	}
+}
