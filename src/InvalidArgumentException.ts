@@ -16,5 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export { default } from "./Exception";
-export { default as InvalidArgumentException } from "./InvalidArgumentException";
+import Exception from "./Exception";
+
+export default class InvalidArgumentException extends Exception {
+	constructor(message: (string | null) = null,
+	            cause: (Exception | Error | null) = null) {
+		super(message, cause);
+	}
+}
