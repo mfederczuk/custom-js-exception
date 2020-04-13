@@ -1,6 +1,6 @@
 {
 	"name": "@mfederczuk/custom-exception",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"description": "Custom Exception class",
 	"keywords": [
 		"exception",
