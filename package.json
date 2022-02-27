@@ -10,7 +10,7 @@
 	"bugs": {
 		"url": "https://github.com/mfederczuk/custom-js-exception/issues"
 	},
-	"license": "GPL-3.0-or-later",
+	"license": "MPL-2.0 AND Apache-2.0",
 	"author": "Michael Federczuk <federczuk.michael@protonmail.com>",
 	"contributors": [
 		"Michael Federczuk <federczuk.michael@protonmail.com>"
