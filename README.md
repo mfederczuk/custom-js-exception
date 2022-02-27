@@ -1,34 +1,23 @@
+<!--
+  Copyright (c) 2022 Michael Federczuk
+  SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Custom JavaScript Exception #
 
-[version_shield]: https://img.shields.io/badge/version-1.1.0-blue.svg
-[latest_release]: https://github.com/mfederczuk/custom-js-exception/releases/latest "Latest Release"
-[![version: 1.1.0][version_shield]][latest_release]
-[![Changelog](https://img.shields.io/badge/-Changelog-blue)](./CHANGELOG.md "Changelog")
+[version_shield]: https://img.shields.io/badge/version-1.1.0-informational.svg
+[release_page]: https://github.com/mfederczuk/custom-js-exception/releases/tag/v1.1.0 "Release v1.1.0"
+[![version: 1.1.0][version_shield]][release_page]
+[![Changelog](https://img.shields.io/badge/-Changelog-informational.svg)](CHANGELOG.md "Changelog")
 
 ## About ##
 
 A custom **JavaScript** exception class.
 
-## Download ##
-
-Using **npm**:
-
-```sh
-npm i @mfederczuk/custom-js-exception
-```
-
-Using **Yarn**:
-
-```sh
-yarn add @mfederczuk/custom-js-exception
-```
-
 ## Usage ##
 
-Just extend the [`Exception`](src/index.ts#L22) class and call the super
- constructor from yours.  
-It's a good idea to have an optional `cause` parameter that you pass to the
- super constructor call as well.
+Just extend the [`Exception`](src/Exception.ts#L22) class and call the super constructor from yours.  
+It's a good idea to have an optional `cause` parameter that you pass to the super constructor call as well.
 
 ```ts
 import Exception from "@mfederczuk/custom-exception";
@@ -42,11 +31,26 @@ class CustomException extends Exception {
 throw new CustomException(12);
 ```
 
+## Installation ##
+
+Using **npm**:
+
+```sh
+npm i @mfederczuk/custom-js-exception
+```
+
+Using **Yarn**:
+
+```sh
+yarn add @mfederczuk/custom-js-exception
+```
+
 ## Contributing ##
 
-Read through the [Custom JavaScript Exception Contribution Guidelines](./CONTRIBUTING.md)
- if you want to contribute to this project.
+Read through the [Contribution Guidelines](CONTRIBUTING.md) if you want to contribute to this project.
 
 ## License ##
 
-[GNU GPLv3+](./LICENSE)
+**Custom JavaScript Exception** is licensed under both the [**Mozilla Public License 2.0**](LICENSES/MPL-2.0.txt) AND
+the [**Apache License 2.0**](LICENSES/Apache-2.0.txt).  
+For more information about copying and licensing, see the [`COPYING.txt`](COPYING.txt) file.
