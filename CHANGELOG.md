@@ -17,6 +17,14 @@ and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/
 
 * Switched from `GPL-3.0-or-later` to `MPL-2.0 AND Apache-2.0`
 
+### Fixed ###
+
+* **TypeScript** is not anymore a (non-dev) dependency
+
+### Security ###
+
+* Updated dependencies
+
 ## [v1.1.0] - 2020-04-13 ##
 
 [v1.1.0]: https://github.com/mfederczuk/custom-js-exception/releases/tags/v1.1.0

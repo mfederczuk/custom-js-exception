@@ -4,10 +4,14 @@
 		"declaration": true,
 		"declarationDir": "types",
 		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"module": "commonjs",
 		"noImplicitAny": true,
 		"outDir": "out",
+		"removeComments": true,
+		"skipLibCheck": true,
 		"strict": true,
-		"target": "ES5"
+		"target": "ES2015"
 	},
 	"include": ["src"]
 }
