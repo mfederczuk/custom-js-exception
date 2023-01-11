@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2022 Michael Federczuk
+  Copyright (c) 2023 Michael Federczuk
   SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
@@ -11,9 +11,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [**Keep a Changelog v1.0.0**](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased ##
+
+### Security ###
+
+* Updated dependencies
+
 ## [v1.2.0] - 2022-02-27 ##
 
-[v1.2.0]: https://github.com/mfederczuk/custom-js-exception/releases/tags/v1.2.0
+[v1.2.0]: https://github.com/mfederczuk/custom-js-exception/releases/tag/v1.2.0
 
 ### Changed ###
 
@@ -41,7 +47,7 @@ and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/
 
 ## [v1.0.1] - 2020-04-10 ##
 
-[v1.0.1]: https://github.com/mfederczuk/custom-js-exception/releases/tags/v1.0.1
+[v1.0.1]: https://github.com/mfederczuk/custom-js-exception/releases/tag/v1.0.1
 
 ### Security ###
 
@@ -51,6 +57,4 @@ and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/
 
 [v1.0.0]: https://github.com/mfederczuk/custom-js-exception/releases/tags/v1.0.0
 
-### Added ###
-
-* Base `Exception` class
+Initial Release
