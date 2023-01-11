@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2022 Michael Federczuk
+  Copyright (c) 2023 Michael Federczuk
   SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
@@ -16,7 +16,7 @@ A custom **JavaScript** exception class.
 
 ## Usage ##
 
-Just extend the [`Exception`](src/Exception.ts#L22) class and call the super constructor from yours.  
+Just extend the [`Exception`](src/Exception.ts#L9) class and call the super constructor from yours.  
 It's a good idea to have an optional `cause` parameter that you pass to the super constructor call as well.
 
 ```ts
