@@ -17,16 +17,18 @@
 		"Michael Federczuk <federczuk.michael@protonmail.com>"
 	],
 	"files": [
+		"CHANGELOG.md",
 		"COPYING.txt",
 		"LICENSE.txt",
-		"LICENSES",
-		"out",
-		"types"
+		"LICENSES/",
+		"README.md",
+		"lib/",
+		"types/"
 	],
-	"main": "out/index.js",
+	"main": "lib/index.js",
 	"types": "types/index.d.ts",
 	"directories": {
-		"lib": "out"
+		"lib": "lib"
 	},
 	"repository": {
 		"type": "git",
@@ -35,19 +37,21 @@
 	"scripts": {
 		"lint": "npx --package=eslint -- eslint .",
 
-		"build": "npx --package=typescript -- tsc",
+		"build": "npx --package=typescript -- tsc --build",
 		"build-watch": "npm run build -- --watch",
-		"clean": "rm -rf -- types/ out/",
+		"clean": "rm -rf -- build/",
 		"rebuild": "npm run clean && npm run build --",
 
-		"postprocess": "find out/ -type f -name '*.js' -exec npx --package=uglify-js -- uglifyjs -o {} -- {} \\;",
+		"postprocess": "find build/js -type f -name '*.js' -exec npx --package=uglify-js -- uglifyjs -o {} -- {} \\;",
 
 		"test": "true",
 
-		"update-dependencies": "rm -rf types/ out/ node_modules/ package-lock.json yarn.lock && npm update --save && npx --package=npm-check-updates ncu --upgrade && npm install",
+		"update-dependencies": "npm run clean && rm -rf -- node_modules/ package-lock.json && npm update --save && npx --package=npm-check-updates ncu --upgrade && npm install",
 		"install-git-pre-commit-hook": "./install-git-pre-commit-hook",
 
-		"prepare": "npm run clean && npm run lint && npm run test && npm run build && npm run postprocess"
+		"prepack": "npm run clean && npm run lint && npm run build && npm run postprocess && npm run test && cp -Rp -- build/js/ lib && cp -Rp -- build/types/ .",
+		"prepare": "if git --no-pager rev-parse 2> '/dev/null'; then ./install-git-pre-commit-hook; fi",
+		"postpack": "rm -rf -- types/ lib/"
 	},
 	"devDependencies": {
 		"@types/node": "^18.11.18",

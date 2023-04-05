@@ -1,16 +1,42 @@
 // SPDX-License-Identifier: CC0-1.0
 {
 	"compilerOptions": {
+		// Type Checking
+		"alwaysStrict": true,
+		"exactOptionalPropertyTypes": true,
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"strict": true,
+		"strictBindCallApply": true,
+		"strictFunctionTypes": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true,
+		"useUnknownInCatchVariables": true,
+
+		// Modules
+		"module": "commonjs",
+
+		// Emit
 		"declaration": true,
-		"declarationDir": "types",
+		"declarationDir": "build/types",
+		"outDir": "build/js",
+
+		// Interop Constraints
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
-		"module": "commonjs",
-		"noImplicitAny": true,
-		"outDir": "out",
-		"skipLibCheck": true,
-		"strict": true,
+
+		// Language and Environment
 		"target": "ES2015",
+
+		// Projects
+		"incremental": true,
+		"tsBuildInfoFile": "build/tsconfig.tsbuildinfo",
+
+		// Completeness
+		"skipLibCheck": true,
 	},
-	"include": ["src"],
+	"include": ["src/"],
 }
