@@ -68,7 +68,7 @@ export default class Exception extends Error {
 		}
 	}
 
-	toString(): string {
+	override toString(): string {
 		if(this.message === "") return this.name;
 		return `${this.name}: ${this.message}`;
 	}
@@ -111,7 +111,13 @@ export default class Exception extends Error {
 
 		const exc = new Exception(err.message);
 		exc.name = err.name;
-		exc.stack = err.stack;
+
+		if("stack" in err) {
+			exc.stack = err.stack;
+		} else {
+			delete exc.stack;
+		}
+
 		return exc;
 	}
 }

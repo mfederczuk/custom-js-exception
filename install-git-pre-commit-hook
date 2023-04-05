@@ -1,0 +1,72 @@
+#!/bin/sh
+# -*- sh -*-
+# vim: syntax=sh
+# code: language=shellscript
+
+# Copyright (c) 2023 Michael Federczuk
+# SPDX-License-Identifier: MPL-2.0 AND Apache-2.0
+
+case "$-" in
+	(*'i'*)
+		\command printf 'script was called interactively\n' >&2
+		return 124
+		;;
+esac
+
+set -o errexit
+set -o nounset
+
+# enabling POSIX-compliant behavior for GNU programs
+export POSIXLY_CORRECT=yes POSIX_ME_HARDER=yes
+
+
+if [ "${0#/}" = "$0" ]; then
+	argv0="$0"
+else
+	argv0="$(basename -- "$0" && printf x)"
+	argv0="${argv0%"$(printf '\nx')"}"
+fi
+readonly argv0
+
+
+if [ $# -gt 0 ]; then
+	printf '%s: too many arguments: %i\n' "$argv0" $# >&2
+	exit 4
+fi
+
+
+root_dir_pathname="$(dirname -- "$0" && printf x)"
+root_dir_pathname="${root_dir_pathname%"$(printf '\nx')"}"
+readonly root_dir_pathname
+
+pre_commit_hook_source_file_pathname="$root_dir_pathname/git-pre-commit-hook"
+readonly pre_commit_hook_source_file_pathname
+
+if [ ! -e "$pre_commit_hook_source_file_pathname" ]; then
+	printf '%s: %s: no such file\n' "$argv0" "$pre_commit_hook_source_file_pathname" >&2
+	exit 24
+fi
+
+if [ ! -f "$pre_commit_hook_source_file_pathname" ]; then
+	if [ -d "$pre_commit_hook_source_file_pathname" ]; then
+		what='file'
+	else
+		what='regular file'
+	fi
+	readonly what
+
+	printf '%s: %s: not a %s\n' "$argv0" "$pre_commit_hook_source_file_pathname" "$what" >&2
+	exit 26
+fi
+
+
+pre_commit_hook_target_file_pathname="$(git --no-pager rev-parse --git-path 'hooks/pre-commit')"
+readonly pre_commit_hook_target_file_pathname
+
+hook_files_dir_pathname="$(dirname -- "$pre_commit_hook_target_file_pathname" && printf x)"
+hook_files_dir_pathname="${hook_files_dir_pathname%"$(printf '\nx')"}"
+readonly hook_files_dir_pathname
+
+
+mkdir -p -- "$hook_files_dir_pathname"
+cp -- "$pre_commit_hook_source_file_pathname" "$pre_commit_hook_target_file_pathname"

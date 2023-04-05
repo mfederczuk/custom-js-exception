@@ -1,8 +1,231 @@
 #!/bin/sh
 # -*- sh -*-
-# vim: set syntax=sh
+# vim: syntax=sh
 # code: language=shellscript
 
-# SPDX-License-Identifier: CC0-1.0
+# Copyright (c) 2023 Michael Federczuk
+# SPDX-License-Identifier: MPL-2.0 AND Apache-2.0
 
-npm run prepare
+case "$-" in
+	(*'i'*)
+		\command printf 'script was called interactively\n' >&2
+		return 124
+		;;
+esac
+
+set -o errexit
+set -o nounset
+
+# enabling POSIX-compliant behavior for GNU programs
+export POSIXLY_CORRECT=yes POSIX_ME_HARDER=yes
+
+
+if [ "${0#/}" = "$0" ]; then
+	argv0="$0"
+else
+	argv0="$(basename -- "$0" && printf x)"
+	argv0="${argv0%"$(printf '\nx')"}"
+fi
+readonly argv0
+
+
+if ! command -v npm > '/dev/null'; then
+	printf '%s: npm: program missing\n' "$argv0" >&2
+	exit 27
+fi
+
+#region cleanup
+
+# <https://gist.github.com/mfederczuk/f9a031a1185cd96daf9d4110cb65b902>
+
+#region internals & implementations
+
+__cleanup_internal__expression_stack_size=0
+
+# assumes that the stack has at least one item
+__cleanup_internal__pop_only() {
+	__cleanup_internal__expression_stack_size=$((__cleanup_internal__expression_stack_size - 1))
+}
+
+# assumes that the stack has at least one item
+__cleanup_internal__pop_and_execute() {
+	__cleanup_internal__pop_and_execute__is_errexit_set='' || return
+	case "$-" in
+		(*'e'*)
+			__cleanup_internal__pop_and_execute__is_errexit_set='x' || return
+			;;
+	esac
+
+	__cleanup_internal__pop_only
+
+	set +o errexit || return
+
+	(
+		if [ -n "$__cleanup_internal__pop_and_execute__is_errexit_set" ]; then
+			set -o errexit
+		fi
+
+		eval "eval \"\$__cleanup_internal__expression_stack_item_$__cleanup_internal__expression_stack_size\""
+	)
+	__cleanup_internal__pop_and_execute__exc=$?
+
+	if [ -n "$__cleanup_internal__pop_and_execute__is_errexit_set" ]; then
+		set -o errexit
+	fi
+
+	return $__cleanup_internal__pop_and_execute__exc
+}
+
+__cleanup_internal__do_cleanup() {
+	set +o errexit
+
+	__cleanup_internal__do_cleanup__final_exc=$?
+
+	while [ $__cleanup_internal__expression_stack_size -gt 0 ]; do
+		__cleanup_internal__pop_and_execute
+		__cleanup_internal__do_cleanup__tmp_exc=$?
+
+		if [ $__cleanup_internal__do_cleanup__final_exc -eq 0 ]; then
+			__cleanup_internal__do_cleanup__final_exc=$__cleanup_internal__do_cleanup__tmp_exc
+		fi
+	done
+
+	return $__cleanup_internal__do_cleanup__final_exc
+}
+
+cleanup_push() {
+	case $# in
+		(0)
+			printf '%s: cleanup_push: missing argument: <expression>\n' "$0" >&2
+			return 3
+			;;
+		(1)
+			if [ -z "$1" ]; then
+				printf '%s: cleanup_push: argument must not be empty\n' "$0" >&2
+				return 9
+			fi
+			;;
+		(*)
+			printf '%s: cleanup_push: too many arguments: %i\n' "$0" $(($# - 1)) >&2
+			return 4
+			;;
+	esac
+
+	eval "__cleanup_internal__expression_stack_item_$__cleanup_internal__expression_stack_size=\"\$1\"" || return
+	__cleanup_internal__expression_stack_size=$((__cleanup_internal__expression_stack_size + 1))
+}
+
+cleanup_pop() {
+	case $# in
+		(0) ;;
+		(1)
+			if [ "$1" != 'execute' ]; then
+				printf "%s: cleanup_pop: %s: invalid argument: expected 'execute'\\n" "$0" "$1" >&2
+				return 7
+			fi
+			;;
+		(*)
+			if [ "$1" = 'execute' ]; then
+				printf '%s: cleanup_pop: too many arguments: %i\n' "$0" $(($# - 1)) >&2
+			else
+				printf '%s: cleanup_pop: too many arguments: %i\n' "$0" $# >&2
+			fi
+			return 4
+			;;
+	esac
+
+	if [ $__cleanup_internal__expression_stack_size -le 0 ]; then
+		return
+	fi
+
+	if [ "${1-}" = 'execute' ]; then
+		__cleanup_internal__pop_and_execute
+	else
+		__cleanup_internal__pop_only
+	fi
+}
+
+# <https://github.com/koalaman/shellcheck/issues/2492>
+# shellcheck disable=2120
+cleanup_setup_traps() {
+	if [ $# -gt 0 ]; then
+		printf '%s: cleanup_setup_traps: too many arguments: %i\n' "$0" $# >&2
+		return 4
+	fi
+
+	trap __cleanup_internal__do_cleanup EXIT
+	trap 'trap - EXIT; __cleanup_internal__do_cleanup' INT QUIT TERM
+}
+
+#endregion
+
+cleanup_setup_traps
+
+#endregion
+
+#region setting up temporary directory
+
+base_tmp_dir_pathname="${TMPDIR:-"${TMP:-"${TEMP:-"${TEMPDIR:-"${TMP_DIR:-"${TEMP_DIR:-"/tmp"}"}"}"}"}"}"
+base_tmp_dir_pathname="${base_tmp_dir_pathname%"/"}"
+readonly base_tmp_dir_pathname
+
+process_tmp_dir_pathname="$base_tmp_dir_pathname/$$"
+readonly process_tmp_dir_pathname
+
+remove_process_tmp_dir() {
+    # shellcheck disable=2317
+    rm -r -- "$process_tmp_dir_pathname"
+}
+
+mkdir -p -- "$process_tmp_dir_pathname"
+
+cleanup_push remove_process_tmp_dir
+
+#endregion
+
+git() {
+    command git -c diff.noprefix=false --no-pager "$@"
+}
+
+git_apply() {
+    git apply --ignore-whitespace --whitespace=nowarn --allow-empty "$@"
+}
+
+#region generating unstaged changes patch
+
+unstaged_changes_patch_file_pathname="$process_tmp_dir_pathname/unstaged-changes.patch"
+readonly unstaged_changes_patch_file_pathname
+
+git diff --patch --raw -z --color=never --full-index --binary \
+         --output="$unstaged_changes_patch_file_pathname"
+
+#endregion
+
+#region listing staged Type- & JavaScript files
+
+# weird name, but it makes sense:
+# (starting from the right) it is the pathname of the file that stores the pathnames of the staged TS & JS files
+staged_ts_and_js_file_pathnames_file_pathname="$process_tmp_dir_pathname/staged-ts-and-js-files"
+readonly staged_ts_and_js_file_pathnames_file_pathname
+
+git diff --name-only -z --color=never --cached --relative \
+         --output="$staged_ts_and_js_file_pathnames_file_pathname" \
+         -- '*.ts' '*.js'
+
+#endregion
+
+if [ ! -s "$staged_ts_and_js_file_pathnames_file_pathname" ]; then
+	exit 0
+fi
+
+restore_unstaged_changes() {
+	git_apply -- "$unstaged_changes_patch_file_pathname"
+}
+
+git_apply --reverse -- "$unstaged_changes_patch_file_pathname"
+
+cleanup_push restore_unstaged_changes
+
+npm run-script lint
+npm run-script build
+npm test
