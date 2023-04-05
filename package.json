@@ -45,6 +45,7 @@
 		"test": "true",
 
 		"update-dependencies": "rm -rf types/ out/ node_modules/ package-lock.json yarn.lock && npm update --save && npx --package=npm-check-updates ncu --upgrade && npm install",
+		"install-git-pre-commit-hook": "./install-git-pre-commit-hook",
 
 		"prepare": "npm run clean && npm run lint && npm run test && npm run build && npm run postprocess"
 	},
