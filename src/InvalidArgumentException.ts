@@ -3,8 +3,11 @@
 import Exception from "./Exception";
 
 export default class InvalidArgumentException extends Exception {
-	constructor(message: (string | null) = null,
-	            cause: (Exception | Error | null) = null) {
+
+	constructor(
+		message: (string | null) = null,
+		cause: (Exception | Error | null) = null,
+	) {
 		super(message, cause);
 	}
 }

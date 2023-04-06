@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC0-1.0
 
-export { default, default as Exception } from "./Exception";
+export { default as Exception, default } from "./Exception";
 export { default as IllegalStateException } from "./IllegalStateException";
 export { default as InternalException } from "./InternalException";
 export { default as InvalidArgumentException } from "./InvalidArgumentException";
