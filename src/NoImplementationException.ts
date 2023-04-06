@@ -3,6 +3,7 @@
 import Exception from "./Exception";
 
 export default class NoImplementationException extends Exception {
+
 	constructor() {
 		super("No implementation");
 	}

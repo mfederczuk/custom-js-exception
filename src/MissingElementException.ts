@@ -2,7 +2,7 @@
 
 import Exception from "./Exception";
 
-export default class InternalException extends Exception {
+export default class MissingElementException extends Exception {
 
 	constructor(
 		message: (string | null) = null,
