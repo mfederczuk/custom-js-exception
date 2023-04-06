@@ -5,9 +5,9 @@
 
 # Custom JavaScript Exception #
 
-[version_shield]: https://img.shields.io/badge/version-1.3.0-informational.svg
-[release_page]: https://github.com/mfederczuk/custom-js-exception/releases/tag/v1.3.0 "Release v1.3.0"
-[![version: 1.3.0][version_shield]][release_page]
+[version_shield]: https://img.shields.io/badge/version-1.4.0-informational.svg
+[release_page]: https://github.com/mfederczuk/custom-js-exception/releases/tag/v1.4.0 "Release v1.4.0"
+[![version: 1.4.0][version_shield]][release_page]
 [![Changelog](https://img.shields.io/badge/-Changelog-informational.svg)](CHANGELOG.md "Changelog")
 
 ## About ##
